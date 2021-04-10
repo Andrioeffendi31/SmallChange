@@ -6,38 +6,169 @@
     android:layout_height="match_parent"
     tools:context=".Dashboard">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:paddingLeft="36dp"
-        android:paddingRight="36dp"
+        android:layout_marginBottom="110dp"
+        android:scrollbarThumbHorizontal="@null"
+        android:scrollbarThumbVertical="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
 
-        <androidx.cardview.widget.CardView
-            android:layout_marginTop="128dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="320dp"
-            app:cardCornerRadius="30dp"
-            app:cardElevation="4dp"
-            app:cardPreventCornerOverlap="true"
-            app:cardUseCompatPadding="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardView2"
-            android:layout_width="match_parent"
-            android:layout_height="140dp"
-            app:cardCornerRadius="30dp"
-            app:cardElevation="4dp"
-            app:cardPreventCornerOverlap="true"
-            app:cardUseCompatPadding="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cardView3">
+
+                <RadioButton
+                    android:layout_width="92dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/radio_selector"
+                    android:button="@android:color/transparent"
+                    android:elevation="4dp"
+                    android:fontFamily="@font/bold"
+                    android:padding="16dp"
+                    android:text="Today"
+                    android:textAlignment="center"
+                    android:textColor="@drawable/radio_button_text" />
+
+                <RadioButton
+                    android:layout_width="92dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/radio_selector"
+                    android:button="@android:color/transparent"
+                    android:elevation="4dp"
+                    android:fontFamily="@font/bold"
+                    android:padding="16dp"
+                    android:text="7 days"
+                    android:textAlignment="center"
+                    android:textColor="@drawable/radio_button_text" />
+
+                <RadioButton
+                    android:layout_width="92dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/radio_selector"
+                    android:button="@android:color/transparent"
+                    android:elevation="4dp"
+                    android:fontFamily="@font/bold"
+                    android:padding="16dp"
+                    android:text="31 days"
+                    android:textAlignment="center"
+                    android:textColor="@drawable/radio_button_text" />
+
+            </RadioGroup>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                app:cardCornerRadius="26dp"
+                app:cardElevation="4dp"
+                app:cardPreventCornerOverlap="true"
+                app:cardUseCompatPadding="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:id="@+id/tvTextBalance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/bold"
+                        android:text="Current Balance"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tvCurrentBalance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/bold"
+                        android:text="20.000.000"
+                        android:textColor="@color/black"
+                        android:textSize="34sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvTextBalance" />
+
+                    <TextView
+                        android:id="@+id/tvViewHistory"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/medium"
+                        android:text="View History"
+                        android:textColor="@color/biru"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvCurrentBalance" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView3"
+                android:layout_width="match_parent"
+                android:layout_height="320dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="140dp"
+                android:layout_marginRight="10dp"
+                app:cardCornerRadius="26dp"
+                app:cardElevation="4dp"
+                app:cardPreventCornerOverlap="true"
+                app:cardUseCompatPadding="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:id="@+id/tvTextStatistic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/bold"
+                        android:text="Financial Statistics"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
@@ -65,9 +196,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="58dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
         android:alpha="0"
-        android:translationY="-100dp"
+        android:translationY="-110dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 

@@ -37,11 +37,11 @@
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/homeTabLayout"
                 android:layout_width="match_parent"
-                android:layout_height="70sp"
+                android:layout_height="64sp"
                 android:background="@drawable/bordered_box"
                 app:tabIndicatorFullWidth="false"
                 app:tabIndicatorHeight="4sp"
-                app:tabIconTint="@color/biru"/>
+                app:tabIconTint="@color/tab_color_selector"/>
             </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
