@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class Dashboard extends Fragment {
-    private ImageView upperCircle;
+    private ImageView upperBox, upperBox2;
     private TextView welocomeText, username;
     private ConstraintLayout userInfo;
     @Override
@@ -26,13 +26,15 @@ public class Dashboard extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
-        upperCircle = view.findViewById(R.id.upperCircle);
+        upperBox = view.findViewById(R.id.upperBox);
+        upperBox2 = view.findViewById(R.id.upperBox2);
         welocomeText = view.findViewById(R.id.tvHello);
         username = view.findViewById(R.id.usernameDashboard);
         userInfo = view.findViewById(R.id.userInfoContainer);
 
-        upperCircle.animate().translationY(0).alpha(1).setDuration(1200);
-        userInfo.animate().translationY(0).alpha(1).setDuration(1000).setStartDelay(800);
+        upperBox.animate().translationX(0).alpha(1).setDuration(800);
+        upperBox2.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(1000);
+        userInfo.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(600);
         return view;
     }
 }
