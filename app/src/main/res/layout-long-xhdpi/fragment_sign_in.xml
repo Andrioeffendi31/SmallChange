@@ -12,7 +12,7 @@
         android:padding="50sp">
 
         <TextView
-            android:layout_marginTop="40sp"
+            android:layout_marginTop="10sp"
             android:id="@+id/tvEmailSignIn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
             android:gravity="center"
             android:text="E-mail"
             android:textColor="@color/biru"
-            android:textSize="20sp"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -56,14 +56,14 @@
 
         <TextView
             android:id="@+id/tvPasswordSignIn"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/bold"
             android:gravity="center"
             android:text="Password"
             android:textColor="@color/biru"
-            android:textSize="20sp"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editEmailSignInWrapper" />
@@ -118,7 +118,7 @@
             android:gravity="center"
             android:text="Forget Password ?"
             android:textColor="@color/biru"
-            android:textSize="18sp"
+            android:textSize="16sp"
             app:layout_constraintTop_toBottomOf="@+id/btnSignIn"
             tools:layout_editor_absoluteX="50dp" />
 

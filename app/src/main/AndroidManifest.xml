@@ -10,6 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmallChange">
         <activity
+            android:name=".HomeActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ReseatActivity"></activity>
+        <activity
             android:name=".Login"
             android:screenOrientation="portrait" />
         <activity android:name=".MainActivity" />

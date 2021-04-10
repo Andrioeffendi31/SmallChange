@@ -11,4 +11,7 @@
     <color name="biru">#97258c</color>
     <color name="merah">#ee3f6a</color>
     <color name="hijau">#fdcd1b</color>
+
+    <color name="transparentDarkBlue">#3097258c</color>
+    <color name="transparentLightBlue">#1097258c</color>
 </resources>

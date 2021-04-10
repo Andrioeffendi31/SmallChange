@@ -4,7 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -50,5 +56,34 @@ public class Login extends AppCompatActivity {
                 tabLayoutLogin.selectTab(tabLayoutLogin.getTabAt(position));
             }
         });
+    }
+
+    private void checkSession() {
+        //check if user is logged in
+        //if user is logged in --> move to mainActivity
+
+        SessionManagement sessionManagement = new SessionManagement(Login.this);
+        int userID = sessionManagement.getSession();
+
+        if(userID != -1){
+            //user id logged in and so move to mainActivity
+            moveToHome();
+        }
+        else{
+            //do nothing
+        }
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        checkSession();
+    }
+
+    private void moveToHome() {
+        Intent intent = new Intent(Login.this, HomeActivity.class);
+        intent.putExtra("Login", 1);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }
