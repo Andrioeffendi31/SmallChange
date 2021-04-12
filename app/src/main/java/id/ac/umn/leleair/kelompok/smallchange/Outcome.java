@@ -1,5 +1,6 @@
 package id.ac.umn.leleair.kelompok.smallchange;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,58 +8,64 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link Outcome#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class Outcome extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public Outcome() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Outcome.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static Outcome newInstance(String param1, String param2) {
-        Outcome fragment = new Outcome();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    Spinner filter;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_outcome, container, false);
+        View view = inflater.inflate(R.layout.fragment_outcome, container, false);
+        filter = view.findViewById(R.id.filterOutcome);
+
+        initializeFilter();
+
+        return view;
+    }
+
+    private void initializeFilter() {
+        String[] value = {"Show All", "Today", "7 days ago", "31 days ago"};
+        ArrayList<String> arrayList = new ArrayList<>(Arrays.asList(value));
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(),R.layout.customview_spinner,arrayList){
+
+            @Override
+            public View getDropDownView(int position, View convertView,ViewGroup parent) {
+                // TODO Auto-generated method stub
+
+                View view = super.getView(position, convertView, parent);
+
+                TextView text = (TextView)view.findViewById(R.id.tvFilter);
+                text.setTextColor(getResources().getColor(R.color.biru));
+
+                return view;
+
+            }
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                // TODO Auto-generated method stub
+
+                View view = super.getView(position, convertView, parent);
+
+                TextView text = (TextView)view.findViewById(R.id.tvFilter);
+                text.setTextColor(getResources().getColor(R.color.white));
+
+                return view;
+
+            }
+        };
+        filter.setAdapter(arrayAdapter);
     }
 }
