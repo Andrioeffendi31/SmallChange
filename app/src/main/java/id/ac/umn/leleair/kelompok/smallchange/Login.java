@@ -1,4 +1,4 @@
-package id.ac.umn.effendi.andrio.smallchange;
+package id.ac.umn.leleair.kelompok.smallchange;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -6,11 +6,6 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
 

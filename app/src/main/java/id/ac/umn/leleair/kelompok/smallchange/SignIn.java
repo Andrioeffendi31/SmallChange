@@ -1,4 +1,4 @@
-package id.ac.umn.effendi.andrio.smallchange;
+package id.ac.umn.leleair.kelompok.smallchange;
 
 import android.app.ProgressDialog;
 import android.content.Intent;

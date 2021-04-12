@@ -1,7 +1,8 @@
-package id.ac.umn.effendi.andrio.smallchange;
+package id.ac.umn.leleair.kelompok.smallchange;
 
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
@@ -13,10 +14,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class Dashboard extends Fragment {
-    private ImageView upperBox, upperBox2;
+    private ImageView upperBox, upperBox2, user_photo, backgroundBox;
     private TextView welocomeText, username, incomeText, outcomeText;
     private ConstraintLayout userInfo;
     private ProgressBar incomeProgress, outcomeProgress;
+    private CardView photoContainer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,9 @@ public class Dashboard extends Fragment {
         incomeProgress = view.findViewById(R.id.income_progressBar);
         outcomeText = view.findViewById(R.id.outcome_progressText);
         outcomeProgress = view.findViewById(R.id.outcome_progressBar);
+        user_photo = view.findViewById(R.id.photoProfile);
+        backgroundBox = view.findViewById(R.id.backgroundBox);
+        photoContainer = view.findViewById(R.id.photoProfileContainer);
 
         ProgressBarAnimation anim1 = new ProgressBarAnimation(incomeProgress, incomeText, 0, 80);
         ProgressBarAnimation anim2 = new ProgressBarAnimation(outcomeProgress, outcomeText, 0, 40);
@@ -49,6 +54,8 @@ public class Dashboard extends Fragment {
         upperBox.animate().translationX(0).alpha(1).setDuration(800);
         upperBox2.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(1000);
         userInfo.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(600);
+        backgroundBox.animate().translationY(0).alpha(1).setDuration(800).setStartDelay(600);
+        photoContainer.animate().alpha(1).setDuration(600).setStartDelay(1400);
         return view;
     }
 }

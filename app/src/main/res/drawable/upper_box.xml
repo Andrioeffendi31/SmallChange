@@ -6,7 +6,7 @@
         android:color="@color/biru" />
 
     <corners
-        android:bottomLeftRadius="48sp" />
+        android:bottomLeftRadius="26dp" />
 
 
 </shape>

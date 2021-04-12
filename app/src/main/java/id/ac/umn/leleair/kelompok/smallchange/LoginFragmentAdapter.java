@@ -1,4 +1,4 @@
-package id.ac.umn.effendi.andrio.smallchange;
+package id.ac.umn.leleair.kelompok.smallchange;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="id.ac.umn.effendi.andrio.smallchange">
+    package="id.ac.umn.leleair.kelompok.smallchange">
 
     <application
         android:allowBackup="true"
@@ -10,14 +10,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmallChange">
         <activity
-            android:name=".HomeActivity"
+            android:name="id.ac.umn.leleair.kelompok.smallchange.HomeActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".ReseatActivity"></activity>
+        <activity android:name="id.ac.umn.leleair.kelompok.smallchange.ReseatActivity"></activity>
         <activity
-            android:name=".Login"
+            android:name="id.ac.umn.leleair.kelompok.smallchange.Login"
             android:screenOrientation="portrait" />
-        <activity android:name=".MainActivity" />
-        <activity android:name=".SplashScreen">
+        <activity android:name="id.ac.umn.leleair.kelompok.smallchange.MainActivity" />
+        <activity android:name="id.ac.umn.leleair.kelompok.smallchange.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
