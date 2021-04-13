@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.material.tabs.TabLayout;
@@ -33,7 +34,7 @@ public class HomeActivity extends AppCompatActivity {
         tabLayoutHome.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                pager2Home.setCurrentItem(tab.getPosition());
+
             }
 
             @Override
