@@ -7,10 +7,12 @@
     tools:context=".Income">
 
     <ImageView
-        android:id="@+id/backgroundBox"
+        android:id="@+id/backgroundBoxIncome"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="@drawable/bordered_box4"
+        android:translationY="300dp"
+        android:alpha="0"
+        android:background="@drawable/bordered_box2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -40,9 +42,11 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout3"
+        android:id="@+id/PageTitleIncome"
         android:layout_width="match_parent"
         android:layout_height="76dp"
+        android:translationY="-130dp"
+        android:alpha="0"
         android:background="@drawable/upper_box4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -64,15 +68,16 @@
         android:id="@+id/filterIncome"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="40dp"
+        android:alpha="0"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="42dp"
+        android:layout_marginEnd="42dp"
         android:background="@drawable/style_spinner"
+        android:dropDownVerticalOffset="40dp"
         android:gravity="center"
         android:orientation="vertical"
-        android:spinnerMode="dropdown"
         android:popupBackground="@drawable/rounded_box"
-        android:dropDownVerticalOffset="40dp"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
+        android:spinnerMode="dropdown"
+        app:layout_constraintTop_toBottomOf="@+id/PageTitleIncome" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

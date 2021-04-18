@@ -7,10 +7,12 @@
     tools:context=".UserPanel">
 
     <ImageView
-        android:id="@+id/backgroundBox"
+        android:id="@+id/backgroundBoxUP"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="@color/transparentLightBlue"
+        android:translationY="300dp"
+        android:alpha="0"
+        android:background="@drawable/bordered_box2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -24,29 +26,38 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
+        android:id="@+id/backWallet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="180dp"
+        android:layout_marginTop="200dp"
         android:layout_marginBottom="160dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
+        android:translationY="200dp"
+        android:alpha="0"
         android:background="@drawable/wallet_back"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+
     <ImageView
         android:id="@+id/piggy"
-        android:layout_width="245dp"
-        android:layout_height="255dp"
+        android:layout_width="260dp"
+        android:layout_height="260dp"
+        android:translationY="180dp"
         android:layout_marginTop="26dp"
         android:elevation="4dp"
+        android:alpha="0"
         android:background="@drawable/ic_pig_04"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
+
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/frontWallet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="200dp"
@@ -54,9 +65,47 @@
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="160dp"
         android:elevation="5dp"
+        android:translationY="200dp"
+        android:alpha="0"
         android:background="@drawable/wallet_front">
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/photoContainer"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_marginTop="100dp"
+        android:alpha="0"
+        android:background="@drawable/circle_white"
+        android:elevation="5dp"
+        app:layout_constraintBottom_toBottomOf="@+id/piggy"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/piggy">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="124dp"
+            android:layout_height="124dp"
+            app:cardCornerRadius="60dp"
+            android:elevation="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/photoProfileUP"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/circle"
+                android:src="@drawable/ic_default_img_white_01"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

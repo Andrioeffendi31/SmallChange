@@ -56,6 +56,29 @@ public class Dashboard extends Fragment {
         userInfo.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(600);
         backgroundBox.animate().translationY(0).alpha(1).setDuration(800).setStartDelay(600);
         photoContainer.animate().alpha(1).setDuration(600).setStartDelay(1400);
+
         return view;
+    }
+
+    public void playAnimIn(){
+        ProgressBarAnimation anim1 = new ProgressBarAnimation(incomeProgress, incomeText, 0, 80);
+        ProgressBarAnimation anim2 = new ProgressBarAnimation(outcomeProgress, outcomeText, 0, 40);
+        anim1.setDuration(1400);
+        anim2.setDuration(1400);
+        incomeProgress.startAnimation(anim1);
+        outcomeProgress.startAnimation(anim2);
+
+        backgroundBox.animate().translationY(0).alpha(1).setDuration(800).setStartDelay(600);
+    }
+
+    public void playAnimOut(){
+        ProgressBarAnimation anim1 = new ProgressBarAnimation(incomeProgress, incomeText, 80, 0);
+        ProgressBarAnimation anim2 = new ProgressBarAnimation(outcomeProgress, outcomeText, 40, 0);
+        anim1.setDuration(1400);
+        anim2.setDuration(1400);
+        incomeProgress.startAnimation(anim1);
+        outcomeProgress.startAnimation(anim2);
+
+        backgroundBox.animate().translationY(400).alpha(0).setDuration(800).setStartDelay(600);
     }
 }
