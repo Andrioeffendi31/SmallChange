@@ -23,4 +23,11 @@
         <item name="android:fontFamily">@font/bold</item>
         <item name="android:textSize">18sp</item>
     </style>
+
+    <!--Button Text Style-->
+    <style name="button_text" parent="@android:style/TextAppearance.Widget.TabWidget">
+        <item name="android:fontFamily">@font/bold</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
 </resources>

@@ -93,7 +93,7 @@ public class SignUp extends Fragment {
                                 if(task.isSuccessful()){
                                     mDialog.dismiss();
                                     Toast.makeText(getActivity().getApplicationContext(), "Registration Complete", Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(getActivity().getApplicationContext(),HomeActivity.class));
+                                    moveToHome();
                                 }
                                 else {
                                     mDialog.dismiss();
@@ -137,5 +137,11 @@ public class SignUp extends Fragment {
     public boolean validatePassword(String password) {
         matcherPass = PassPattern.matcher(password);
         return matcherPass.matches();
+    }
+
+    private void moveToHome() {
+        Intent intent = new Intent(getActivity(), HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }

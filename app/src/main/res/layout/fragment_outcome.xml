@@ -20,7 +20,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewOutcome"
         android:layout_width="match_parent"
-        android:layout_height="526dp"
+        android:layout_height="560dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView10" />
@@ -80,5 +80,21 @@
         android:popupBackground="@drawable/rounded_box"
         android:spinnerMode="dropdown"
         app:layout_constraintTop_toBottomOf="@+id/PageTitleOutcome" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddOutcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="100dp"
+        android:layout_marginEnd="26dp"
+        android:translationY="100dp"
+        android:alpha="0"
+        app:fabSize="auto"
+        app:elevation="5dp"
+        app:backgroundTint="@color/biru"
+        android:src="@drawable/ic_baseline_add_24"
+        app:tint="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/imageView10" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

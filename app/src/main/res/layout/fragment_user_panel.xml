@@ -64,10 +64,63 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="160dp"
+        android:padding="52dp"
         android:elevation="5dp"
         android:translationY="200dp"
         android:alpha="0"
         android:background="@drawable/wallet_front">
+
+        <TextView
+            android:layout_marginTop="42sp"
+            android:id="@+id/tvUsernameUP"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/bold"
+            android:gravity="center"
+            android:text="Andrio Effendi"
+            android:textColor="@color/white"
+            android:textSize="26sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvEmailSignIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/medium"
+            android:gravity="center"
+            android:text="andrioeffendi31@gmail.com"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvUsernameUP" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnChangePass"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginBottom="58dp"
+            android:backgroundTint="@color/hijau"
+            android:text="Change Password"
+            android:textAppearance="@style/button_text"
+            android:textColor="@color/biru"
+            app:cornerRadius="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvEmailSignIn"
+            tools:layout_editor_absoluteX="52dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="60sp"
+            android:backgroundTint="@color/merah"
+            android:text="Logout"
+            android:textAppearance="@style/button_text"
+            app:cornerRadius="18sp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintTop_toBottomOf="@+id/btnChangePass" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

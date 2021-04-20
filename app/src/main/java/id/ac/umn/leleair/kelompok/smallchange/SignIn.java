@@ -91,10 +91,6 @@ public class SignIn extends Fragment {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if(task.isSuccessful()){
                                     mDialog.dismiss();
-                                    User user = new User(26963,emailSignIn);
-                                    SessionManagement sessionManagement = new SessionManagement(getActivity());
-                                    sessionManagement.saveSession(user);
-
                                     moveToHome();
                                     Toast.makeText(getActivity().getApplicationContext(), "Sign In Succesfull", Toast.LENGTH_SHORT).show();
                                 }
@@ -142,7 +138,6 @@ public class SignIn extends Fragment {
     }
     private void moveToHome() {
         Intent intent = new Intent(getActivity(), HomeActivity.class);
-        intent.putExtra("Login", 1);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

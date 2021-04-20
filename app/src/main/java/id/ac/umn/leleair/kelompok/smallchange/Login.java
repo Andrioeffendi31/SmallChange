@@ -4,10 +4,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.lang.reflect.Method;
 
 public class Login extends AppCompatActivity {
     TabLayout tabLayoutLogin;
@@ -20,6 +28,8 @@ public class Login extends AppCompatActivity {
 
         tabLayoutLogin = findViewById(R.id.loginTabLayout);
         pager2Login = findViewById(R.id.viewpagerLogin);
+
+        checkUserSession();
 
         FragmentManager fm = getSupportFragmentManager();
         loginAdapter = new LoginFragmentAdapter(fm, getLifecycle());
@@ -53,32 +63,18 @@ public class Login extends AppCompatActivity {
         });
     }
 
-    private void checkSession() {
-        //check if user is logged in
-        //if user is logged in --> move to mainActivity
+    private void checkUserSession(){
+        //Initialize Firebase Auth & User
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
-        SessionManagement sessionManagement = new SessionManagement(Login.this);
-        int userID = sessionManagement.getSession();
-
-        if(userID != -1){
-            //user id logged in and so move to mainActivity
-            moveToHome();
-        }
-        else{
-            //do nothing
+        //check if user already signed in
+        if(firebaseUser != null){
+            Intent intent = new Intent(this, HomeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         }
     }
-    @Override
-    protected void onStart() {
-        super.onStart();
 
-        checkSession();
-    }
 
-    private void moveToHome() {
-        Intent intent = new Intent(Login.this, HomeActivity.class);
-        intent.putExtra("Login", 1);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-    }
 }
