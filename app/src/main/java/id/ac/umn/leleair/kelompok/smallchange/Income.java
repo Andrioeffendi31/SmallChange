@@ -54,6 +54,19 @@ public class Income extends Fragment {
     //RecyclerView
     private RecyclerView recyclerView;
 
+    //Initialize for Update Item
+    private EditText editAmount;
+    private EditText editType;
+    private EditText editNote;
+    private Button btnUpdate;
+    private Button btnDelete;
+
+    //Data item value
+    private String type;
+    private String note;
+    private int amount;
+    private String post_key;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,6 +127,19 @@ public class Income extends Fragment {
                 viewHolder.setNote(model.getNote());
                 viewHolder.setDate(model.getDate());
                 viewHolder.setAmount(model.getAmount());
+
+                viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        post_key = getRef(position).getKey();
+
+                        type = model.getType();
+                        note = model.getNote();
+                        amount = model.getAmount();
+
+                        updateIncomeData();
+                    }
+                });
             }
         };
 
@@ -220,5 +246,77 @@ public class Income extends Fragment {
             }
         };
         filter.setAdapter(arrayAdapter);
+    }
+
+    private void updateIncomeData(){
+        //New Transaction Form
+        Dialog mdialog = new Dialog(getActivity());
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        View myviewm = inflater.inflate(R.layout.update_data_form, null);
+        mdialog.setContentView(myviewm);
+        mdialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        editAmount = myviewm.findViewById(R.id.editTransactionAmount);
+        editType = myviewm.findViewById(R.id.editTransactionName);
+        editNote = myviewm.findViewById(R.id.editTransactionNote);
+
+        //Set Income data to edit text
+        editType.setText(type);
+        editType.setSelection(type.length());
+
+        editNote.setText(note);
+        editNote.setSelection(note.length());
+
+        editAmount.setText(String.valueOf(amount));
+        editAmount.setSelection(String.valueOf(amount).length());
+
+        //Define button
+        btnUpdate = myviewm.findViewById(R.id.btnUpdateTransaction);
+        btnDelete = myviewm.findViewById(R.id.btnDeleteTransaction);
+
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                type = editType.getText().toString().trim();
+                note = editNote.getText().toString().trim();
+
+                String amountValue = String.valueOf(amount);
+                amountValue = editAmount.getText().toString().trim();
+
+
+                String mDate = DateFormat.getDateInstance().format(new Date());
+
+                if(TextUtils.isEmpty(amountValue)){
+                    editAmount.setError("Required Field");
+                    return;
+                }
+                int myAmount = Integer.parseInt(amountValue);
+                if(TextUtils.isEmpty(type)){
+                    editType.setError("Required Field");
+                    return;
+                }
+                if(TextUtils.isEmpty(note)){
+                    editNote.setError("Required Field");
+                    return;
+                }
+
+                // Update transaction to database
+                if(post_key != null){
+                    Data data = new Data(myAmount, type, note, post_key, mDate);
+                    mIncomeDatabase.child(post_key).setValue(data);
+                    Toast.makeText(getActivity(), "Transaction has been updated", Toast.LENGTH_SHORT).show();
+
+                    mdialog.dismiss();
+                }
+            }
+        });
+
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mdialog.dismiss();
+            }
+        });
+        mdialog.show();
     }
 }
