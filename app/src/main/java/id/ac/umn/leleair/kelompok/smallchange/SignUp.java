@@ -19,9 +19,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import id.ac.umn.leleair.kelompok.smallchange.Model.User;
 
 
 public class SignUp extends Fragment {
@@ -35,6 +40,7 @@ public class SignUp extends Fragment {
     private Matcher matcherEmail, matcherPass;
 
     private ProgressDialog mDialog;
+    private DatabaseReference mUsername;
 
     //Firebase Authentification
     private FirebaseAuth mAuth;
@@ -91,6 +97,17 @@ public class SignUp extends Fragment {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if(task.isSuccessful()){
+                                    //get User id
+                                    FirebaseUser mUser = mAuth.getCurrentUser();
+                                    String uid = mUser.getUid();
+
+                                    //Create database child for username
+                                    mUsername = FirebaseDatabase.getInstance().getReference().child("Username").child(uid);
+                                    String id = mUsername.push().getKey();
+                                    if(id != null){
+                                        User user = new User(id, usernameSignUp);
+                                        mUsername.child(id).setValue(user);
+                                    }
                                     mDialog.dismiss();
                                     Toast.makeText(getActivity().getApplicationContext(), "Registration Complete", Toast.LENGTH_SHORT).show();
                                     moveToHome();

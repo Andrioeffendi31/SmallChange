@@ -249,10 +249,10 @@ public class Income extends Fragment {
     }
 
     private void updateIncomeData(){
-        //New Transaction Form
+        //Update Transaction Form
         Dialog mdialog = new Dialog(getActivity());
         LayoutInflater inflater = LayoutInflater.from(getActivity());
-        View myviewm = inflater.inflate(R.layout.update_data_form, null);
+        View myviewm = inflater.inflate(R.layout.update_data_form,null);
         mdialog.setContentView(myviewm);
         mdialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 

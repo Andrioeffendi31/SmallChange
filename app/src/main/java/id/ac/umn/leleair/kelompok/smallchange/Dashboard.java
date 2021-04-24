@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import id.ac.umn.leleair.kelompok.smallchange.Model.Data;
+import id.ac.umn.leleair.kelompok.smallchange.Model.User;
 
 public class Dashboard extends Fragment {
     private ImageView upperBox, upperBox2, user_photo, backgroundBox;
@@ -35,12 +36,13 @@ public class Dashboard extends Fragment {
     private ProgressBar incomeProgress, outcomeProgress;
     private CardView photoContainer;
     private int sumOutcome, sumIncome;
-    private String stTotalValue;
+    private String stTotalValue, stUsername;
 
     //Firebase
     private FirebaseAuth mAuth;
     private DatabaseReference mIncomeDatabase;
     private DatabaseReference mOutcomeDatabase;
+    private DatabaseReference mUsername;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,7 @@ public class Dashboard extends Fragment {
 
         mIncomeDatabase = FirebaseDatabase.getInstance().getReference().child("IncomeData").child(uid);
         mOutcomeDatabase = FirebaseDatabase.getInstance().getReference().child("OutcomeData").child(uid);
+        mUsername = FirebaseDatabase.getInstance().getReference().child("Username").child(uid);
 
         upperBox = view.findViewById(R.id.upperBox);
         upperBox2 = view.findViewById(R.id.upperBox2);
@@ -89,6 +92,25 @@ public class Dashboard extends Fragment {
     }
 
     public void checkDatabaseUpdate() {
+        mUsername.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                stUsername = "";
+
+                for(DataSnapshot mSnapshot:snapshot.getChildren()){
+                    User user = mSnapshot.getValue(User.class);
+                    assert  user != null;
+                    stUsername = user.getUsername();
+                }
+                username.setText(stUsername);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         mIncomeDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
