@@ -60,9 +60,9 @@ public class Dashboard extends Fragment {
         FirebaseUser mUser = mAuth.getCurrentUser();
         String uid = mUser.getUid();
 
+        mUsername = FirebaseDatabase.getInstance().getReference().child("Username").child(uid);
         mIncomeDatabase = FirebaseDatabase.getInstance().getReference().child("IncomeData").child(uid);
         mOutcomeDatabase = FirebaseDatabase.getInstance().getReference().child("OutcomeData").child(uid);
-        mUsername = FirebaseDatabase.getInstance().getReference().child("Username").child(uid);
 
         upperBox = view.findViewById(R.id.upperBox);
         upperBox2 = view.findViewById(R.id.upperBox2);
@@ -85,8 +85,6 @@ public class Dashboard extends Fragment {
         userInfo.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(600);
         backgroundBox.animate().translationY(0).alpha(1).setDuration(800).setStartDelay(600);
         photoContainer.animate().alpha(1).setDuration(600).setStartDelay(1400);
-
-
 
         return view;
     }
@@ -121,6 +119,16 @@ public class Dashboard extends Fragment {
                     assert data != null;
                     sumIncome += data.getAmount();
                 }
+
+                stTotalValue = String.valueOf(sumIncome-sumOutcome);
+                currentBalance.setText(stTotalValue);
+
+                ProgressBarAnimation anim1 = new ProgressBarAnimation(incomeProgress, incomeText, 0, calculatePercentage((float) sumIncome, (float) sumOutcome));
+                ProgressBarAnimation anim2 = new ProgressBarAnimation(outcomeProgress, outcomeText, 0, calculatePercentage((float) sumOutcome, (float) sumIncome));
+                anim1.setDuration(1400);
+                anim2.setDuration(1400);
+                incomeProgress.startAnimation(anim1);
+                outcomeProgress.startAnimation(anim2);
             }
 
             @Override
@@ -137,6 +145,10 @@ public class Dashboard extends Fragment {
                     assert data != null;
                     sumOutcome += data.getAmount();
                 }
+
+                //Debug Only
+                Log.i("Income",String.valueOf(sumIncome));
+                Log.i("Outcome",String.valueOf(sumOutcome));
 
                 stTotalValue = String.valueOf(sumIncome-sumOutcome);
                 currentBalance.setText(stTotalValue);
