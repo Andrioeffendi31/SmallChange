@@ -6,8 +6,11 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -21,11 +24,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -43,6 +50,9 @@ public class Income extends Fragment {
     //Firebase
     private FirebaseAuth mAuth;
     private DatabaseReference mIncomeDatabase;
+
+    //RecyclerView
+    private RecyclerView recyclerView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,6 +76,14 @@ public class Income extends Fragment {
         PageTitle = view.findViewById(R.id.PageTitleIncome);
         backgroundBox = view.findViewById(R.id.backgroundBoxIncome);
         fabAddIncome = view.findViewById((R.id.fabAddIncome));
+        recyclerView = view.findViewById((R.id.recyclerViewIncome));
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+
+        layoutManager.setReverseLayout(true);
+        layoutManager.setStackFromEnd(true);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(layoutManager);
 
         initializeFilter();
 
@@ -77,6 +95,30 @@ public class Income extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+
+        FirebaseRecyclerAdapter<Data, MyViewHolder>adapter = new FirebaseRecyclerAdapter<Data, MyViewHolder>
+                (
+                        Data.class,
+                        R.layout.income_item,
+                        MyViewHolder.class,
+                        mIncomeDatabase
+                ) {
+            @Override
+            protected void populateViewHolder(MyViewHolder viewHolder, Data model, int position) {
+                viewHolder.setType(model.getType());
+                viewHolder.setNote(model.getNote());
+                viewHolder.setDate(model.getDate());
+                viewHolder.setAmount(model.getAmount());
+            }
+        };
+
+        //Set Recycler view adapter
+        recyclerView.setAdapter(adapter);
     }
 
     public void insertIncomeData(){
@@ -135,6 +177,7 @@ public class Income extends Fragment {
         PageTitle.animate().translationY(0).alpha(1).setDuration(400);
         filter.animate().alpha(1).setDuration(400).setStartDelay(600);
         fabAddIncome.animate().translationY(0).alpha(1).setDuration(400);
+        recyclerView.animate().translationY(0).alpha(1).setDuration(400).setStartDelay(600);
     }
 
     public void playAnimOut(){
@@ -142,6 +185,7 @@ public class Income extends Fragment {
         PageTitle.animate().translationY(-130).alpha(0).setDuration(200);
         filter.animate().alpha(0).setDuration(200);
         fabAddIncome.animate().translationY(100).alpha(0).setDuration(200);
+        recyclerView.animate().translationY(100).alpha(0).setDuration(200);
     }
 
     private void initializeFilter() {
