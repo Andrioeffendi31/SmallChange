@@ -105,6 +105,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout3">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -118,6 +120,9 @@
                 android:layout_marginTop="20dp"
                 android:fontFamily="@font/bold"
                 android:text="Income"
+                android:scaleX="0.5"
+                android:scaleY="0.5"
+                android:alpha="0"
                 android:textColor="@color/black"
                 android:textSize="22sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -127,8 +132,10 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerIncome"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_height="200dp"
+                android:scaleX="0.5"
+                android:scaleY="0.5"
+                android:alpha="0"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvIncome" />
@@ -140,6 +147,9 @@
                 android:layout_marginTop="20dp"
                 android:fontFamily="@font/bold"
                 android:text="Outcome"
+                android:scaleX="0.5"
+                android:scaleY="0.5"
+                android:alpha="0"
                 android:textColor="@color/black"
                 android:textSize="22sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -149,8 +159,10 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerOutcome"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_height="200dp"
+                android:scaleX="0.5"
+                android:scaleY="0.5"
+                android:alpha="0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvOutcome" />
 
