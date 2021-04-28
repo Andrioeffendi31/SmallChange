@@ -89,6 +89,7 @@
             android:padding="10dp">
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnFilter"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:background="@drawable/ic_dashboardicon_13"

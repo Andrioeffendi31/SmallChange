@@ -30,4 +30,9 @@
         <item name="android:textSize">18sp</item>
     </style>
 
+    <style name="popupMenuStyle" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:textColor">@color/biru</item>
+        <item name="android:fontFamily">@font/semibold</item>
+        <item name="android:popupBackground">@drawable/rounded_box</item>
+    </style>
 </resources>

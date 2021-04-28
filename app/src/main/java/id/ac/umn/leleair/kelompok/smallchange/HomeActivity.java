@@ -14,8 +14,8 @@ import java.util.ArrayList;
 public class HomeActivity extends AppCompatActivity {
 
     //Initialize Variable
-    TabLayout tabLayoutHome;
-    ViewPager viewPager;
+    public static TabLayout tabLayoutHome;
+    public static ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -1,5 +1,6 @@
 package id.ac.umn.leleair.kelompok.smallchange;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,11 +9,16 @@ import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,6 +32,7 @@ import www.sanju.zoomrecyclerlayout.ZoomRecyclerLayout;
 public class History extends Fragment {
     private ImageView backgroundBox;
     private TextView tvIncome, tvOutcome;
+    private Button showFilterBtn;
 
     //Firebase
     private FirebaseAuth mAuth;
@@ -60,6 +67,7 @@ public class History extends Fragment {
         mRecyclerOutcome = view.findViewById(R.id.recyclerOutcome);
         tvIncome = view.findViewById(R.id.tvIncome);
         tvOutcome = view.findViewById(R.id.tvOutcome);
+        showFilterBtn = view.findViewById(R.id.btnFilter);
 
         //Setup RecyclerView
         LinearLayoutManager layoutManagerIncome = new ZoomRecyclerLayout(getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -79,6 +87,39 @@ public class History extends Fragment {
         mRecyclerOutcome.setHasFixedSize(true);
         mRecyclerOutcome.setNestedScrollingEnabled(false);
         mRecyclerOutcome.setLayoutManager(layoutManagerOutcome);
+
+        //init popup menu
+        Context wrapper = new ContextThemeWrapper(getActivity().getApplicationContext(), R.style.popupMenuStyle);
+        PopupMenu popupMenu = new PopupMenu(wrapper,showFilterBtn);
+        popupMenu.getMenuInflater().inflate(R.menu.filter_popup, popupMenu.getMenu());
+
+        //handle popup menu item clicks
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int id = item.getItemId();
+                switch (id) {
+                    case R.id.showAll:
+                        Toast.makeText(getActivity().getApplicationContext(), "Show all transaction history", Toast.LENGTH_SHORT).show();
+                    case R.id.today:
+                        Toast.makeText(getActivity().getApplicationContext(), "Today transaction history", Toast.LENGTH_SHORT).show();
+                    case R.id.sevenDays:
+                        Toast.makeText(getActivity().getApplicationContext(), "Transaction history for the last 7 days", Toast.LENGTH_SHORT).show();
+                    case R.id.thirtyOneDays:
+                        Toast.makeText(getActivity().getApplicationContext(), "Transaction history for the last 31 days", Toast.LENGTH_SHORT).show();
+                    default:
+                        return false;
+                }
+
+            }
+        });
+
+        showFilterBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupMenu.show();
+            }
+        });
 
         return  view;
     }

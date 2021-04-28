@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/showAll"
+        android:title="Show All"/>
+    <item android:id="@+id/today"
+        android:title="today" />
+    <item android:id="@+id/sevenDays"
+        android:title="7 Days" />
+    <item android:id="@+id/thirtyOneDays"
+        android:title="31 Days" />
+</menu>

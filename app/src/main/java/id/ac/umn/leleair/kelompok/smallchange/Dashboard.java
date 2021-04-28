@@ -31,7 +31,7 @@ import id.ac.umn.leleair.kelompok.smallchange.Model.User;
 
 public class Dashboard extends Fragment {
     private ImageView upperBox, upperBox2, user_photo, backgroundBox;
-    private TextView welocomeText, username, incomeText, outcomeText, currentBalance;
+    private TextView welocomeText, username, incomeText, outcomeText, currentBalance, tvViewHistory;
     private ConstraintLayout userInfo;
     private ProgressBar incomeProgress, outcomeProgress;
     private CardView photoContainer;
@@ -77,6 +77,7 @@ public class Dashboard extends Fragment {
         backgroundBox = view.findViewById(R.id.backgroundBox);
         photoContainer = view.findViewById(R.id.photoProfileContainer);
         currentBalance = view.findViewById(R.id.tvCurrentBalance);
+        tvViewHistory = view.findViewById(R.id.tvViewHistory);
 
         checkDatabaseUpdate();
 
@@ -85,6 +86,14 @@ public class Dashboard extends Fragment {
         userInfo.animate().translationX(0).alpha(1).setDuration(800).setStartDelay(600);
         backgroundBox.animate().translationY(0).alpha(1).setDuration(800).setStartDelay(600);
         photoContainer.animate().alpha(1).setDuration(600).setStartDelay(1400);
+
+        tvViewHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HomeActivity.viewPager.setCurrentItem(3);
+                HomeActivity.tabLayoutHome.getTabAt(3).select();
+            }
+        });
 
         return view;
     }
