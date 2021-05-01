@@ -23,8 +23,8 @@ import android.widget.Toast;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 import id.ac.umn.leleair.kelompok.smallchange.Model.Data;
 import www.sanju.zoomrecyclerlayout.ZoomRecyclerLayout;
@@ -36,8 +36,8 @@ public class History extends Fragment {
 
     //Firebase
     private FirebaseAuth mAuth;
-    private DatabaseReference mIncomeDatabase;
-    private DatabaseReference mOutcomeDatabase;
+    private Query mIncomeDatabase;
+    private Query mOutcomeDatabase;
 
     //Recycler View
     private RecyclerView mRecyclerIncome;
@@ -59,8 +59,8 @@ public class History extends Fragment {
         FirebaseUser mUser = mAuth.getCurrentUser();
         String uid = mUser.getUid();
 
-        mIncomeDatabase = FirebaseDatabase.getInstance().getReference().child("IncomeData").child(uid);
-        mOutcomeDatabase = FirebaseDatabase.getInstance().getReference().child("OutcomeData").child(uid);
+        mIncomeDatabase = FirebaseDatabase.getInstance().getReference().child("IncomeData").child(uid).orderByChild("date");
+        mOutcomeDatabase = FirebaseDatabase.getInstance().getReference().child("OutcomeData").child(uid).orderByChild("date");
 
         backgroundBox = view.findViewById(R.id.backgroundBoxHistory);
         mRecyclerIncome = view.findViewById(R.id.recyclerIncome);
