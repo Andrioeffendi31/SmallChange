@@ -20,6 +20,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -31,6 +35,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import id.ac.umn.leleair.kelompok.smallchange.Model.Data;
 import id.ac.umn.leleair.kelompok.smallchange.Model.User;
@@ -41,6 +47,11 @@ public class UserPanel extends Fragment {
     private ImageView piggy, backWallet, backgroundBox;
     private ConstraintLayout frontWallet, photoContainer;
     private String stUsername;
+
+    //Pass Regex Auth
+    private static final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{4,}$";
+    private Pattern PassPattern = Pattern.compile(PASSWORD_PATTERN);
+    private Matcher matcherPass;
 
     //Firebase
     private FirebaseAuth mAuth;
@@ -107,10 +118,11 @@ public class UserPanel extends Fragment {
         mdialog.setContentView(myviewm);
         mdialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         int width = (int)(getResources().getDisplayMetrics().widthPixels*0.90);
-        int height = (int)(getResources().getDisplayMetrics().heightPixels*0.38);
+        int height = (int)(getResources().getDisplayMetrics().heightPixels*0.44);
 
         mdialog.getWindow().setLayout(width, height);
 
+        EditText editOldPass = myviewm.findViewById(R.id.tvOldPass);
         EditText editNewPass = myviewm.findViewById(R.id.tvNewPass);
 
         Button btnChange = myviewm.findViewById(R.id.btnChangePass);
@@ -118,12 +130,60 @@ public class UserPanel extends Fragment {
         btnChange.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String oldPass = editOldPass.getText().toString().trim();
                 String newPass = editNewPass.getText().toString().trim();
+
+                if(TextUtils.isEmpty(oldPass)){
+                    editOldPass.setError("Required Field");
+                    return;
+                }
+                else if (!validatePassword(newPass)){
+                    editOldPass.setError("Not a valid password!\n" +
+                            "Must be 8 characters (number, lowercase, uppercase and special character)");
+                }
 
                 if(TextUtils.isEmpty(newPass)){
                     editNewPass.setError("Required Field");
                     return;
                 }
+                else if (!validatePassword(newPass)){
+                    editNewPass.setError("Not a valid password!\n" +
+                            "Must be 8 characters (number, lowercase, uppercase and special character)");
+                }
+
+                mAuth = FirebaseAuth.getInstance();
+                FirebaseUser mUser = mAuth.getCurrentUser();
+
+                AuthCredential credential = EmailAuthProvider
+                        .getCredential(mUser.getEmail(), oldPass);
+
+                // Prompt the user to re-provide their sign-in credentials
+                mUser.reauthenticate(credential)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    mUser.updatePassword(newPass).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                try {
+                                                    mAuth.signOut();
+                                                    Toast.makeText(getActivity(), "Password updated", Toast.LENGTH_SHORT).show();
+                                                    moveToLogin();
+                                                } catch (Exception e) {
+                                                    Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), "Logout Failed, please check your internet connection", Toast.LENGTH_SHORT).show();
+                                                }
+                                            } else {
+                                                Toast.makeText(getActivity(), "Error password not updated", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    Toast.makeText(getActivity(), "Error Failed Authentification", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
             }
         });
         mdialog.show();
@@ -180,5 +240,10 @@ public class UserPanel extends Fragment {
         Intent intent = new Intent(getActivity(), Login.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+    }
+
+    public boolean validatePassword(String password) {
+        matcherPass = PassPattern.matcher(password);
+        return matcherPass.matches();
     }
 }
