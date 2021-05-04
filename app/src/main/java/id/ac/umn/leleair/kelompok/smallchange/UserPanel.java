@@ -1,40 +1,62 @@
 package id.ac.umn.leleair.kelompok.smallchange;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,9 +66,14 @@ import id.ac.umn.leleair.kelompok.smallchange.Model.User;
 public class UserPanel extends Fragment {
     private TextView username, email;
     private Button btnChangePass, btnLogout;
-    private ImageView piggy, backWallet, backgroundBox;
+    private ImageView piggy, backWallet, backgroundBox, photoProfile;
     private ConstraintLayout frontWallet, photoContainer;
     private String stUsername;
+    private CardView btnChangeProfileImg;
+
+    //URI for profile image
+    private Uri imageUri;
+    private String myUri = "";
 
     //Pass Regex Auth
     private static final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{4,}$";
@@ -56,6 +83,8 @@ public class UserPanel extends Fragment {
     //Firebase
     private FirebaseAuth mAuth;
     private DatabaseReference mUsername;
+    private DatabaseReference mImage;
+    private StorageReference storageProfileImg;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,6 +104,8 @@ public class UserPanel extends Fragment {
         String uid = mUser.getUid();
 
         mUsername = FirebaseDatabase.getInstance().getReference().child("Username").child(uid);
+        mImage = FirebaseDatabase.getInstance().getReference().child("User");
+        storageProfileImg = FirebaseStorage.getInstance().getReference().child("Profile Img");
 
         piggy = view.findViewById(R.id.piggy);
         backWallet = view.findViewById(R.id.backWallet);
@@ -85,6 +116,8 @@ public class UserPanel extends Fragment {
         email = view.findViewById(R.id.tvEmailUP);
         btnChangePass = view.findViewById(R.id.btnChangePass);
         btnLogout = view.findViewById(R.id.btnLogout);
+        photoProfile = view.findViewById(R.id.photoProfileUP);
+        btnChangeProfileImg = view.findViewById(R.id.changeImgBtn);
 
         checkDatabaseUpdate();
 
@@ -107,8 +140,69 @@ public class UserPanel extends Fragment {
             }
         });
 
+        btnChangeProfileImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = CropImage.activity()
+                        .setAspectRatio(1,1)
+                        .getIntent(getContext());
+                startActivityForResult(intent, CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE);
+            }
+        });
+
         return view;
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == Activity.RESULT_OK) {
+                imageUri = result.getUri();
+                photoProfile.setImageURI(imageUri);
+                uploadProfileImage();
+            }
+        }
+        else {
+            Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), "Error, Please Try Again", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void uploadProfileImage() {
+        final ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.setTitle("Set your profile");
+        progressDialog.setMessage("Please wait, while we are setting your data ");
+        progressDialog.show();
+
+        if (imageUri != null){
+            final StorageReference fileRef = storageProfileImg
+                    .child(mAuth.getCurrentUser().getUid()+ ".jpg");
+            fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            myUri = uri.toString();
+
+                            HashMap<String, Object> userMap = new HashMap<>();
+                            userMap.put("image",myUri);
+
+                            mImage.child(mAuth.getCurrentUser().getUid()).updateChildren(userMap);
+
+                            progressDialog.dismiss();
+                        }
+                    });
+                }
+            });
+        }
+        else {
+            progressDialog.dismiss();
+        }
+    }
+
 
     public void changePass() {
         //Change Password Form
@@ -211,6 +305,24 @@ public class UserPanel extends Fragment {
                     stUsername = user.getUsername();
                 }
                 username.setText(stUsername);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        mImage.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0){
+                    if (dataSnapshot.hasChild("image"))
+                    {
+                        String image = dataSnapshot.child("image").getValue().toString();
+                        Picasso.get().load(image).into(photoProfile);
+                    }
+                }
             }
 
             @Override

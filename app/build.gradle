@@ -42,7 +42,10 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-database:0.4.0'
 
     implementation 'androidx.cardview:cardview:1.0.0'
+    api 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
+    implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.github.Spikeysanju:ZoomRecylerLayout:1.0'
+    implementation 'com.google.firebase:firebase-storage:19.1.1'
 
     testImplementation 'junit:junit:4.+'
     implementation 'junit:junit:4.12'

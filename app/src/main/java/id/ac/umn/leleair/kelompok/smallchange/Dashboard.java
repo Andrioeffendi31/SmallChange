@@ -22,6 +22,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +46,8 @@ public class Dashboard extends Fragment {
     private DatabaseReference mIncomeDatabase;
     private DatabaseReference mOutcomeDatabase;
     private DatabaseReference mUsername;
+    private DatabaseReference mImage;
+    private StorageReference storageProfileImg;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,6 +68,8 @@ public class Dashboard extends Fragment {
         mUsername = FirebaseDatabase.getInstance().getReference().child("Username").child(uid);
         mIncomeDatabase = FirebaseDatabase.getInstance().getReference().child("IncomeData").child(uid);
         mOutcomeDatabase = FirebaseDatabase.getInstance().getReference().child("OutcomeData").child(uid);
+        mImage = FirebaseDatabase.getInstance().getReference().child("User");
+        storageProfileImg = FirebaseStorage.getInstance().getReference().child("Profile Img");
 
         upperBox = view.findViewById(R.id.upperBox);
         upperBox2 = view.findViewById(R.id.upperBox2);
@@ -172,6 +179,24 @@ public class Dashboard extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) { }
+        });
+
+        mImage.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0){
+                    if (dataSnapshot.hasChild("image"))
+                    {
+                        String image = dataSnapshot.child("image").getValue().toString();
+                        Picasso.get().load(image).into(user_photo);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
         });
     }
 
