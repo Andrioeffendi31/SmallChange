@@ -3,6 +3,8 @@ package id.ac.umn.leleair.kelompok.smallchange;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
@@ -23,8 +25,16 @@ import android.widget.Toast;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import id.ac.umn.leleair.kelompok.smallchange.Model.Data;
 import www.sanju.zoomrecyclerlayout.ZoomRecyclerLayout;
@@ -59,8 +69,8 @@ public class History extends Fragment {
         FirebaseUser mUser = mAuth.getCurrentUser();
         String uid = mUser.getUid();
 
-        mIncomeDatabase = FirebaseDatabase.getInstance().getReference().child("IncomeData").child(uid).orderByChild("date");
-        mOutcomeDatabase = FirebaseDatabase.getInstance().getReference().child("OutcomeData").child(uid).orderByChild("date");
+        mIncomeDatabase = FirebaseDatabase.getInstance().getReference().child("IncomeData").child(uid);
+        mOutcomeDatabase = FirebaseDatabase.getInstance().getReference().child("OutcomeData").child(uid);
 
         backgroundBox = view.findViewById(R.id.backgroundBoxHistory);
         mRecyclerIncome = view.findViewById(R.id.recyclerIncome);
@@ -98,19 +108,279 @@ public class History extends Fragment {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 int id = item.getItemId();
-                switch (id) {
-                    case R.id.showAll:
-                        Toast.makeText(getActivity().getApplicationContext(), "Show all transaction history", Toast.LENGTH_SHORT).show();
-                    case R.id.today:
-                        Toast.makeText(getActivity().getApplicationContext(), "Today transaction history", Toast.LENGTH_SHORT).show();
-                    case R.id.sevenDays:
-                        Toast.makeText(getActivity().getApplicationContext(), "Transaction history for the last 7 days", Toast.LENGTH_SHORT).show();
-                    case R.id.thirtyOneDays:
-                        Toast.makeText(getActivity().getApplicationContext(), "Transaction history for the last 31 days", Toast.LENGTH_SHORT).show();
-                    default:
-                        return false;
+                Query incomeQuery, outcomeQuery;
+                String dateTarget;
+
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                Calendar cal = Calendar.getInstance();
+                Date date = cal.getTime();
+                String mDate = df.format(date);
+                FirebaseRecyclerAdapter<Data, IncomeViewHolder> incomeAdapter;
+                FirebaseRecyclerAdapter<Data, OutcomeViewHolder> outcomeAdapter;
+
+                if (id == R.id.showAll){
+                    Toast.makeText(getActivity().getApplicationContext(), "Show all transaction history", Toast.LENGTH_SHORT).show();
+
+                    incomeAdapter = new FirebaseRecyclerAdapter<Data, IncomeViewHolder>
+                            (
+                                    Data.class,
+                                    R.layout.history_income_item,
+                                    History.IncomeViewHolder.class,
+                                    mIncomeDatabase
+                            ) {
+                        @Override
+                        protected void populateViewHolder(IncomeViewHolder incomeViewHolder, Data model, int i) {
+                            //parse date format
+                            String unFormattedDate = model.getDate();
+                            SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
+                            Date date = null;
+                            try {
+                                date = inFormat.parse(unFormattedDate);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            SimpleDateFormat outFormat = new SimpleDateFormat("MMM dd, yyyy");
+                            String formattedDate = outFormat.format(date);
+
+                            incomeViewHolder.setIncomeType(model.getType());
+                            incomeViewHolder.setIncomeAmount(model.getAmount());
+                            incomeViewHolder.setIncomeDate(formattedDate);
+                        }
+                    };
+
+
+
+                    outcomeAdapter = new FirebaseRecyclerAdapter<Data, OutcomeViewHolder>
+                            (
+                                    Data.class,
+                                    R.layout.history_outcome_item,
+                                    History.OutcomeViewHolder.class,
+                                    mOutcomeDatabase
+                            ) {
+                        @Override
+                        protected void populateViewHolder(OutcomeViewHolder outcomeViewHolder, Data model, int i) {
+                            //parse date format
+                            String unFormattedDate = model.getDate();
+                            SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
+                            Date date = null;
+                            try {
+                                date = inFormat.parse(unFormattedDate);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            SimpleDateFormat outFormat = new SimpleDateFormat("MMM dd, yyyy");
+                            String formattedDate = outFormat.format(date);
+
+                            outcomeViewHolder.setOutcomeType(model.getType());
+                            outcomeViewHolder.setOutcomeAmount(model.getAmount());
+                            outcomeViewHolder.setOutcomeDate(formattedDate);
+                        }
+                    };
+                    mRecyclerIncome.setAdapter(incomeAdapter);
+                    mRecyclerOutcome.setAdapter(outcomeAdapter);
+                    return true;
                 }
 
+                else if (id == R.id.today) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Today transaction history", Toast.LENGTH_SHORT).show();
+
+                    incomeQuery = mIncomeDatabase.orderByChild("date").startAt(mDate).endAt(mDate);
+                    outcomeQuery = mOutcomeDatabase.orderByChild("date").startAt(mDate).endAt(mDate);
+
+                    incomeAdapter = new FirebaseRecyclerAdapter<Data, IncomeViewHolder>
+                            (
+                                    Data.class,
+                                    R.layout.history_income_item,
+                                    History.IncomeViewHolder.class,
+                                    incomeQuery
+                            ) {
+                        @Override
+                        protected void populateViewHolder(IncomeViewHolder incomeViewHolder, Data model, int i) {
+                            //parse date format
+                            String unFormattedDate = model.getDate();
+                            SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
+                            Date date = null;
+                            try {
+                                date = inFormat.parse(unFormattedDate);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            SimpleDateFormat outFormat = new SimpleDateFormat("MMM dd, yyyy");
+                            String formattedDate = outFormat.format(date);
+
+                            incomeViewHolder.setIncomeType(model.getType());
+                            incomeViewHolder.setIncomeAmount(model.getAmount());
+                            incomeViewHolder.setIncomeDate(formattedDate);
+                        }
+                    };
+
+                    outcomeAdapter = new FirebaseRecyclerAdapter<Data, OutcomeViewHolder>
+                            (
+                                    Data.class,
+                                    R.layout.history_outcome_item,
+                                    History.OutcomeViewHolder.class,
+                                    outcomeQuery
+                            ) {
+                        @Override
+                        protected void populateViewHolder(OutcomeViewHolder outcomeViewHolder, Data model, int i) {
+                            //parse date format
+                            String unFormattedDate = model.getDate();
+                            SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
+                            Date date = null;
+                            try {
+                                date = inFormat.parse(unFormattedDate);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            SimpleDateFormat outFormat = new SimpleDateFormat("MMM dd, yyyy");
+                            String formattedDate = outFormat.format(date);
+
+                            outcomeViewHolder.setOutcomeType(model.getType());
+                            outcomeViewHolder.setOutcomeAmount(model.getAmount());
+                            outcomeViewHolder.setOutcomeDate(formattedDate);
+                        }
+                    };
+                    mRecyclerIncome.setAdapter(incomeAdapter);
+                    mRecyclerOutcome.setAdapter(outcomeAdapter);
+                    return true;
+                }
+
+                else if (id == R.id.sevenDays) {
+                    cal.add(Calendar.DATE,-7);
+                    date = cal.getTime();
+                    dateTarget = df.format(date);
+
+                    Toast.makeText(getActivity().getApplicationContext(), "7 days transaction history", Toast.LENGTH_SHORT).show();
+
+                    incomeQuery = mIncomeDatabase.orderByChild("date").startAt(dateTarget).endAt(mDate);
+                    outcomeQuery = mOutcomeDatabase.orderByChild("date").startAt(dateTarget).endAt(mDate);
+
+                    incomeAdapter = new FirebaseRecyclerAdapter<Data, IncomeViewHolder>
+                            (
+                                    Data.class,
+                                    R.layout.history_income_item,
+                                    History.IncomeViewHolder.class,
+                                    incomeQuery
+                            ) {
+                        @Override
+                        protected void populateViewHolder(IncomeViewHolder incomeViewHolder, Data model, int i) {
+                            //parse date format
+                            String unFormattedDate = model.getDate();
+                            SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
+                            Date date = null;
+                            try {
+                                date = inFormat.parse(unFormattedDate);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            SimpleDateFormat outFormat = new SimpleDateFormat("MMM dd, yyyy");
+                            String formattedDate = outFormat.format(date);
+
+                            incomeViewHolder.setIncomeType(model.getType());
+                            incomeViewHolder.setIncomeAmount(model.getAmount());
+                            incomeViewHolder.setIncomeDate(formattedDate);
+                        }
+                    };
+
+                    outcomeAdapter = new FirebaseRecyclerAdapter<Data, OutcomeViewHolder>
+                            (
+                                    Data.class,
+                                    R.layout.history_outcome_item,
+                                    History.OutcomeViewHolder.class,
+                                    outcomeQuery
+                            ) {
+                        @Override
+                        protected void populateViewHolder(OutcomeViewHolder outcomeViewHolder, Data model, int i) {
+                            //parse date format
+                            String unFormattedDate = model.getDate();
+                            SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
+                            Date date = null;
+                            try {
+                                date = inFormat.parse(unFormattedDate);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            SimpleDateFormat outFormat = new SimpleDateFormat("MMM dd, yyyy");
+                            String formattedDate = outFormat.format(date);
+
+                            outcomeViewHolder.setOutcomeType(model.getType());
+                            outcomeViewHolder.setOutcomeAmount(model.getAmount());
+                            outcomeViewHolder.setOutcomeDate(formattedDate);
+                        }
+                    };
+                    mRecyclerIncome.setAdapter(incomeAdapter);
+                    mRecyclerOutcome.setAdapter(outcomeAdapter);
+                    return true;
+                }
+
+                else if (id == R.id.thirtyOneDays) {
+                    cal.add(Calendar.DATE,-31);
+                    date = cal.getTime();
+                    dateTarget = df.format(date);
+
+                    Toast.makeText(getActivity().getApplicationContext(), "7 days transaction history", Toast.LENGTH_SHORT).show();
+
+                    incomeQuery = mIncomeDatabase.orderByChild("date").startAt(dateTarget).endAt(mDate);
+                    outcomeQuery = mOutcomeDatabase.orderByChild("date").startAt(dateTarget).endAt(mDate);
+
+                    incomeAdapter = new FirebaseRecyclerAdapter<Data, IncomeViewHolder>
+                            (
+                                    Data.class,
+                                    R.layout.history_income_item,
+                                    History.IncomeViewHolder.class,
+                                    incomeQuery
+                            ) {
+                        @Override
+                        protected void populateViewHolder(IncomeViewHolder incomeViewHolder, Data model, int i) {
+                            //parse date format
+                            String unFormattedDate = model.getDate();
+                            SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
+                            Date date = null;
+                            try {
+                                date = inFormat.parse(unFormattedDate);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            SimpleDateFormat outFormat = new SimpleDateFormat("MMM dd, yyyy");
+                            String formattedDate = outFormat.format(date);
+
+                            incomeViewHolder.setIncomeType(model.getType());
+                            incomeViewHolder.setIncomeAmount(model.getAmount());
+                            incomeViewHolder.setIncomeDate(formattedDate);
+                        }
+                    };
+
+                    outcomeAdapter = new FirebaseRecyclerAdapter<Data, OutcomeViewHolder>
+                            (
+                                    Data.class,
+                                    R.layout.history_outcome_item,
+                                    History.OutcomeViewHolder.class,
+                                    outcomeQuery
+                            ) {
+                        @Override
+                        protected void populateViewHolder(OutcomeViewHolder outcomeViewHolder, Data model, int i) {
+                            //parse date format
+                            String unFormattedDate = model.getDate();
+                            SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
+                            Date date = null;
+                            try {
+                                date = inFormat.parse(unFormattedDate);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            SimpleDateFormat outFormat = new SimpleDateFormat("MMM dd, yyyy");
+                            String formattedDate = outFormat.format(date);
+
+                            outcomeViewHolder.setOutcomeType(model.getType());
+                            outcomeViewHolder.setOutcomeAmount(model.getAmount());
+                            outcomeViewHolder.setOutcomeDate(formattedDate);
+                        }
+                    };
+                    mRecyclerIncome.setAdapter(incomeAdapter);
+                    mRecyclerOutcome.setAdapter(outcomeAdapter);
+                    return true;
+                }
+                return false;
             }
         });
 
@@ -137,9 +407,21 @@ public class History extends Fragment {
                 ) {
             @Override
             protected void populateViewHolder(IncomeViewHolder incomeViewHolder, Data model, int i) {
+                //parse date format
+                String unFormattedDate = model.getDate();
+                SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Date date = null;
+                try {
+                    date = inFormat.parse(unFormattedDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                SimpleDateFormat outFormat = new SimpleDateFormat("MMM dd, yyyy");
+                String formattedDate = outFormat.format(date);
+
                 incomeViewHolder.setIncomeType(model.getType());
                 incomeViewHolder.setIncomeAmount(model.getAmount());
-                incomeViewHolder.setIncomeDate(model.getDate());
+                incomeViewHolder.setIncomeDate(formattedDate);
             }
         };
 
@@ -152,9 +434,21 @@ public class History extends Fragment {
                 ) {
             @Override
             protected void populateViewHolder(OutcomeViewHolder outcomeViewHolder, Data model, int i) {
+                //parse date format
+                String unFormattedDate = model.getDate();
+                SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Date date = null;
+                try {
+                    date = inFormat.parse(unFormattedDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                SimpleDateFormat outFormat = new SimpleDateFormat("MMM dd, yyyy");
+                String formattedDate = outFormat.format(date);
+
                 outcomeViewHolder.setOutcomeType(model.getType());
                 outcomeViewHolder.setOutcomeAmount(model.getAmount());
-                outcomeViewHolder.setOutcomeDate(model.getDate());
+                outcomeViewHolder.setOutcomeDate(formattedDate);
             }
         };
 
