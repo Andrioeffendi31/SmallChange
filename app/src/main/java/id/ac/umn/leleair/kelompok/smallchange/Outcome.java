@@ -16,6 +16,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,10 +34,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 
 import id.ac.umn.leleair.kelompok.smallchange.Model.Data;
@@ -110,68 +115,342 @@ public class Outcome extends Fragment {
         return view;
     }
 
+
     @Override
     public void onStart(){
         super.onStart();
 
-        FirebaseRecyclerAdapter<Data, MyViewHolder> adapter = new FirebaseRecyclerAdapter<Data, MyViewHolder>
-                (
-                        Data.class,
-                        R.layout.income_item,
-                        MyViewHolder.class,
-                        mOutcomeDatabase
-                ) {
+        filter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            protected void populateViewHolder(MyViewHolder viewHolder, Data model, int position) {
-                viewHolder.setType(model.getType());
-                viewHolder.setNote(model.getNote());
-                viewHolder.setDate(model.getDate());
-                viewHolder.setAmount(model.getAmount());
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                Query incomeQuery;
+                String dateTarget;
 
-                viewHolder.mView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        post_key = getRef(position).getKey();
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                Calendar cal = Calendar.getInstance();
+                Date date = cal.getTime();
+                String mDate = df.format(date);
 
-                        type = model.getType();
-                        note = model.getNote();
-                        amount = model.getAmount();
 
-                        updateOutcomeData();
-                    }
-                });
+                if (position == 0) {
+                    FirebaseRecyclerAdapter<Data, MyViewHolder>adapter = new FirebaseRecyclerAdapter<Data, MyViewHolder>
+                            (
+                                    Data.class,
+                                    R.layout.income_item,
+                                    MyViewHolder.class,
+                                    mOutcomeDatabase
+                            ) {
+                        @Override
+                        protected void populateViewHolder(MyViewHolder viewHolder, Data model, int position) {
+                            viewHolder.setType(model.getType());
+                            viewHolder.setNote(model.getNote());
+
+                            //parse date format
+                            String unFormattedDate = model.getDate();
+                            SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
+                            Date date = null;
+                            try {
+                                date = inFormat.parse(unFormattedDate);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            SimpleDateFormat outFormat = new SimpleDateFormat("MMM dd, yyyy");
+                            String formattedDate = outFormat.format(date);
+
+                            //set formatted date
+                            viewHolder.setDate(formattedDate);
+                            viewHolder.setAmount(model.getAmount());
+
+                            viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    post_key = getRef(position).getKey();
+
+                                    type = model.getType();
+                                    note = model.getNote();
+                                    amount = model.getAmount();
+
+                                    updateOutcomeData();
+                                }
+                            });
+                        }
+                    };
+
+                    mOutcomeDatabase.addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                            adapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                            adapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                    //Set Recycler view adapter
+                    recyclerView.setAdapter(adapter);
+                }
+
+                else if (position == 1){
+                    incomeQuery = mOutcomeDatabase.orderByChild("date").startAt(mDate).endAt(mDate);
+                    FirebaseRecyclerAdapter<Data, MyViewHolder>adapter = new FirebaseRecyclerAdapter<Data, MyViewHolder>
+                            (
+                                    Data.class,
+                                    R.layout.income_item,
+                                    MyViewHolder.class,
+                                    incomeQuery
+                            ) {
+                        @Override
+                        protected void populateViewHolder(MyViewHolder viewHolder, Data model, int position) {
+                            viewHolder.setType(model.getType());
+                            viewHolder.setNote(model.getNote());
+
+                            //parse date format
+                            String unFormattedDate = model.getDate();
+                            SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
+                            Date date = null;
+                            try {
+                                date = inFormat.parse(unFormattedDate);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            SimpleDateFormat outFormat = new SimpleDateFormat("MMM dd, yyyy");
+                            String formattedDate = outFormat.format(date);
+
+                            //set formatted date
+                            viewHolder.setDate(formattedDate);
+                            viewHolder.setAmount(model.getAmount());
+
+                            viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    post_key = getRef(position).getKey();
+
+                                    type = model.getType();
+                                    note = model.getNote();
+                                    amount = model.getAmount();
+
+                                    updateOutcomeData();
+                                }
+                            });
+                        }
+                    };
+
+                    mOutcomeDatabase.addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                            adapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                            adapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                    //Set Recycler view adapter
+                    recyclerView.setAdapter(adapter);
+                }
+                else if (position == 2){
+                    cal.add(Calendar.DATE,-7);
+                    date = cal.getTime();
+                    dateTarget = df.format(date);
+
+                    incomeQuery = mOutcomeDatabase.orderByChild("date").startAt(dateTarget).endAt(mDate);
+                    FirebaseRecyclerAdapter<Data, MyViewHolder>adapter = new FirebaseRecyclerAdapter<Data, MyViewHolder>
+                            (
+                                    Data.class,
+                                    R.layout.income_item,
+                                    MyViewHolder.class,
+                                    incomeQuery
+                            ) {
+                        @Override
+                        protected void populateViewHolder(MyViewHolder viewHolder, Data model, int position) {
+                            viewHolder.setType(model.getType());
+                            viewHolder.setNote(model.getNote());
+
+                            //parse date format
+                            String unFormattedDate = model.getDate();
+                            SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
+                            Date date = null;
+                            try {
+                                date = inFormat.parse(unFormattedDate);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            SimpleDateFormat outFormat = new SimpleDateFormat("MMM dd, yyyy");
+                            String formattedDate = outFormat.format(date);
+
+                            //set formatted date
+                            viewHolder.setDate(formattedDate);
+                            viewHolder.setAmount(model.getAmount());
+
+                            viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    post_key = getRef(position).getKey();
+
+                                    type = model.getType();
+                                    note = model.getNote();
+                                    amount = model.getAmount();
+
+                                    updateOutcomeData();
+                                }
+                            });
+                        }
+                    };
+
+                    mOutcomeDatabase.addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                            adapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                            adapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                    //Set Recycler view adapter
+                    recyclerView.setAdapter(adapter);
+
+                }
+                else if (position == 3){
+                    cal.add(Calendar.DATE,-31);
+                    date = cal.getTime();
+                    dateTarget = df.format(date);
+
+                    incomeQuery = mOutcomeDatabase.orderByChild("date").startAt(dateTarget).endAt(mDate);
+                    FirebaseRecyclerAdapter<Data, MyViewHolder>adapter = new FirebaseRecyclerAdapter<Data, MyViewHolder>
+                            (
+                                    Data.class,
+                                    R.layout.income_item,
+                                    MyViewHolder.class,
+                                    incomeQuery
+                            ) {
+                        @Override
+                        protected void populateViewHolder(MyViewHolder viewHolder, Data model, int position) {
+                            viewHolder.setType(model.getType());
+                            viewHolder.setNote(model.getNote());
+
+                            //parse date format
+                            String unFormattedDate = model.getDate();
+                            SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd");
+                            Date date = null;
+                            try {
+                                date = inFormat.parse(unFormattedDate);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            SimpleDateFormat outFormat = new SimpleDateFormat("MMM dd, yyyy");
+                            String formattedDate = outFormat.format(date);
+
+                            //set formatted date
+                            viewHolder.setDate(formattedDate);
+                            viewHolder.setAmount(model.getAmount());
+
+                            viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    post_key = getRef(position).getKey();
+
+                                    type = model.getType();
+                                    note = model.getNote();
+                                    amount = model.getAmount();
+
+                                    updateOutcomeData();
+                                }
+                            });
+                        }
+                    };
+
+                    mOutcomeDatabase.addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                            adapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                            adapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                    //Set Recycler view adapter
+                    recyclerView.setAdapter(adapter);
+
+                }
+
             }
-        };
 
-        mOutcomeDatabase.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
             }
 
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
         });
-
-        //Set Recycler view adapter
-        recyclerView.setAdapter(adapter);
     }
 
     public void insertOutcomeData(){
@@ -195,24 +474,39 @@ public class Outcome extends Fragment {
                 String amount = editAmount.getText().toString().trim();
                 String note = editNote.getText().toString().trim();
 
-                if(TextUtils.isEmpty(amount)){
+                // Validate input from new transaction form
+                if (TextUtils.isEmpty(amount)) {
                     editAmount.setError("Required Field");
                     return;
                 }
-                int ouramountint = Integer.parseInt((amount));
-                if(TextUtils.isEmpty(type)){
+                if (TextUtils.isEmpty(type)) {
                     editType.setError("Required Field");
                     return;
                 }
-                if(TextUtils.isEmpty(note)){
+                else {
+                    if (!validateTitle(type)){
+                        editType.setError("Max 16 characters");
+                        return;
+                    }
+                }
+                if (TextUtils.isEmpty(note)) {
                     editNote.setError("Required Field");
                     return;
                 }
+                else {
+                    if (!validateNote(note)){
+                        editNote.setError("Max 30 characters");
+                        return;
+                    }
+                }
+                int ouramountint = Integer.parseInt((amount));
 
                 // Save transaction to database
                 String id = mOutcomeDatabase.push().getKey();
                 if(id != null){
-                    String mDate = DateFormat.getDateInstance().format(new Date());
+                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                    Date date = Calendar.getInstance().getTime();
+                    String mDate = df.format(date);
                     Data data = new Data(ouramountint, type, note, id, mDate);
                     mOutcomeDatabase.child(id).setValue(data);
                     Toast.makeText(getActivity(), "Transaction added successfully", Toast.LENGTH_SHORT).show();
@@ -310,21 +604,36 @@ public class Outcome extends Fragment {
                 amountValue = editAmount.getText().toString().trim();
 
 
-                String mDate = DateFormat.getDateInstance().format(new Date());
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                Date date = Calendar.getInstance().getTime();
+                String mDate = df.format(date);
 
-                if(TextUtils.isEmpty(amountValue)){
+                // Validate input from update transaction form
+                if (TextUtils.isEmpty(amountValue)) {
                     editAmount.setError("Required Field");
                     return;
                 }
-                int myAmount = Integer.parseInt(amountValue);
-                if(TextUtils.isEmpty(type)){
+                if (TextUtils.isEmpty(type)) {
                     editType.setError("Required Field");
                     return;
                 }
-                if(TextUtils.isEmpty(note)){
+                else {
+                    if (!validateTitle(type)){
+                        editType.setError("Max 16 characters");
+                        return;
+                    }
+                }
+                if (TextUtils.isEmpty(note)) {
                     editNote.setError("Required Field");
                     return;
                 }
+                else {
+                    if (!validateNote(note)){
+                        editNote.setError("Max 30 characters");
+                        return;
+                    }
+                }
+                int myAmount = Integer.parseInt(amountValue);
 
                 // Update transaction to database
                 if(post_key != null){
@@ -346,4 +655,8 @@ public class Outcome extends Fragment {
         });
         mdialog.show();
     }
+
+    public boolean validateTitle(String title) {return title.length() <= 16;}
+
+    public boolean validateNote(String note) {return note.length() <= 16;}
 }
