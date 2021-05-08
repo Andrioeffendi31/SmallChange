@@ -41,6 +41,7 @@
             android:paddingRight="20dp">
 
             <RadioGroup
+                android:id="@+id/RadioFilter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -49,6 +50,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/cardView3">
 
                 <RadioButton
+                    android:id="@+id/RadioToday"
                     android:layout_width="92dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
@@ -62,6 +64,7 @@
                     android:textColor="@drawable/radio_button_text" />
 
                 <RadioButton
+                    android:id="@+id/Radio7D"
                     android:layout_width="92dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
@@ -75,6 +78,7 @@
                     android:textColor="@drawable/radio_button_text" />
 
                 <RadioButton
+                    android:id="@+id/Radio31D"
                     android:layout_width="92dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
