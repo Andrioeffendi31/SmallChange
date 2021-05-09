@@ -190,10 +190,110 @@ public class Dashboard extends Fragment {
                         });
                     }
                     else if(checkedId == R.id.Radio7D) {
-                        Toast.makeText(getActivity().getApplicationContext(), "7 days", Toast.LENGTH_SHORT).show();
+                        cal.add(Calendar.DATE,-7);
+                        date = cal.getTime();
+                        dateTarget = df.format(date);
+
+                        incomeQuery = mIncomeDatabase.orderByChild("date").startAt(dateTarget).endAt(mDate);
+                        outcomeQuery = mOutcomeDatabase.orderByChild("date").startAt(dateTarget).endAt(mDate);
+
+                        incomeQuery.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                totIncome = 0;
+
+                                for(DataSnapshot dataSnapshot:snapshot.getChildren()){
+                                    Data data = dataSnapshot.getValue(Data.class);
+                                    assert data != null;
+                                    totIncome += data.getAmount();
+                                }
+
+                                ProgressBarAnimation anim1 = new ProgressBarAnimation(incomeProgress, incomeText, 0, calculatePercentage((float) totIncome, (float) totOutcome));
+                                ProgressBarAnimation anim2 = new ProgressBarAnimation(outcomeProgress, outcomeText, 0, calculatePercentage((float) totOutcome, (float) totIncome));
+                                anim1.setDuration(1400);
+                                anim2.setDuration(1400);
+                                incomeProgress.startAnimation(anim1);
+                                outcomeProgress.startAnimation(anim2);
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {}
+                        });
+
+                        outcomeQuery.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                totOutcome = 0;
+
+                                for(DataSnapshot dataSnapshot:snapshot.getChildren()){
+                                    Data data = dataSnapshot.getValue(Data.class);
+                                    assert data != null;
+                                    totOutcome += data.getAmount();
+                                }
+
+                                ProgressBarAnimation anim1 = new ProgressBarAnimation(incomeProgress, incomeText, 0, calculatePercentage((float) totIncome, (float) totOutcome));
+                                ProgressBarAnimation anim2 = new ProgressBarAnimation(outcomeProgress, outcomeText, 0, calculatePercentage((float) totOutcome, (float) totIncome));
+                                anim1.setDuration(1400);
+                                anim2.setDuration(1400);
+                                incomeProgress.startAnimation(anim1);
+                                outcomeProgress.startAnimation(anim2);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {}
+                        });
                     }
                     else if(checkedId == R.id.Radio31D) {
-                        Toast.makeText(getActivity().getApplicationContext(), "31 days", Toast.LENGTH_SHORT).show();
+                        cal.add(Calendar.DATE,-31);
+                        date = cal.getTime();
+                        dateTarget = df.format(date);
+
+                        incomeQuery = mIncomeDatabase.orderByChild("date").startAt(dateTarget).endAt(mDate);
+                        outcomeQuery = mOutcomeDatabase.orderByChild("date").startAt(dateTarget).endAt(mDate);
+
+                        incomeQuery.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                totIncome = 0;
+
+                                for(DataSnapshot dataSnapshot:snapshot.getChildren()){
+                                    Data data = dataSnapshot.getValue(Data.class);
+                                    assert data != null;
+                                    totIncome += data.getAmount();
+                                }
+
+                                ProgressBarAnimation anim1 = new ProgressBarAnimation(incomeProgress, incomeText, 0, calculatePercentage((float) totIncome, (float) totOutcome));
+                                ProgressBarAnimation anim2 = new ProgressBarAnimation(outcomeProgress, outcomeText, 0, calculatePercentage((float) totOutcome, (float) totIncome));
+                                anim1.setDuration(1400);
+                                anim2.setDuration(1400);
+                                incomeProgress.startAnimation(anim1);
+                                outcomeProgress.startAnimation(anim2);
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {}
+                        });
+
+                        outcomeQuery.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                totOutcome = 0;
+
+                                for(DataSnapshot dataSnapshot:snapshot.getChildren()){
+                                    Data data = dataSnapshot.getValue(Data.class);
+                                    assert data != null;
+                                    totOutcome += data.getAmount();
+                                }
+
+                                ProgressBarAnimation anim1 = new ProgressBarAnimation(incomeProgress, incomeText, 0, calculatePercentage((float) totIncome, (float) totOutcome));
+                                ProgressBarAnimation anim2 = new ProgressBarAnimation(outcomeProgress, outcomeText, 0, calculatePercentage((float) totOutcome, (float) totIncome));
+                                anim1.setDuration(1400);
+                                anim2.setDuration(1400);
+                                incomeProgress.startAnimation(anim1);
+                                outcomeProgress.startAnimation(anim2);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {}
+                        });
                     }
                 }
             }
