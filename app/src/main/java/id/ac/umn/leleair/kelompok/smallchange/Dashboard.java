@@ -45,7 +45,8 @@ public class Dashboard extends Fragment {
     private ConstraintLayout userInfo;
     private ProgressBar incomeProgress, outcomeProgress;
     private CardView photoContainer;
-    private int sumOutcome, sumIncome, totIncome, totOutcome;
+    private int sumOutcome, sumIncome;
+    private float totIncome, totOutcome;
     private String stTotalValue, stUsername;
     private RadioGroup radioGroup;
     private RadioButton checkedRadioButton;
@@ -155,8 +156,8 @@ public class Dashboard extends Fragment {
                                     totIncome += data.getAmount();
                                 }
 
-                                ProgressBarAnimation anim1 = new ProgressBarAnimation(incomeProgress, incomeText, 0, calculatePercentage((float) totIncome, (float) totOutcome));
-                                ProgressBarAnimation anim2 = new ProgressBarAnimation(outcomeProgress, outcomeText, 0, calculatePercentage((float) totOutcome, (float) totIncome));
+                                ProgressBarAnimation anim1 = new ProgressBarAnimation(incomeProgress, incomeText, 0, calculatePercentage(totIncome, totOutcome));
+                                ProgressBarAnimation anim2 = new ProgressBarAnimation(outcomeProgress, outcomeText, 0, calculatePercentage(totOutcome, totIncome));
                                 anim1.setDuration(1400);
                                 anim2.setDuration(1400);
                                 incomeProgress.startAnimation(anim1);
@@ -177,8 +178,8 @@ public class Dashboard extends Fragment {
                                     totOutcome += data.getAmount();
                                 }
 
-                                ProgressBarAnimation anim1 = new ProgressBarAnimation(incomeProgress, incomeText, 0, calculatePercentage((float) totIncome, (float) totOutcome));
-                                ProgressBarAnimation anim2 = new ProgressBarAnimation(outcomeProgress, outcomeText, 0, calculatePercentage((float) totOutcome, (float) totIncome));
+                                ProgressBarAnimation anim1 = new ProgressBarAnimation(incomeProgress, incomeText, 0, calculatePercentage(totIncome, totOutcome));
+                                ProgressBarAnimation anim2 = new ProgressBarAnimation(outcomeProgress, outcomeText, 0, calculatePercentage(totOutcome, totIncome));
                                 anim1.setDuration(1400);
                                 anim2.setDuration(1400);
                                 incomeProgress.startAnimation(anim1);
@@ -208,8 +209,8 @@ public class Dashboard extends Fragment {
                                     totIncome += data.getAmount();
                                 }
 
-                                ProgressBarAnimation anim1 = new ProgressBarAnimation(incomeProgress, incomeText, 0, calculatePercentage((float) totIncome, (float) totOutcome));
-                                ProgressBarAnimation anim2 = new ProgressBarAnimation(outcomeProgress, outcomeText, 0, calculatePercentage((float) totOutcome, (float) totIncome));
+                                ProgressBarAnimation anim1 = new ProgressBarAnimation(incomeProgress, incomeText, 0, calculatePercentage(totIncome, totOutcome));
+                                ProgressBarAnimation anim2 = new ProgressBarAnimation(outcomeProgress, outcomeText, 0, calculatePercentage(totOutcome, totIncome));
                                 anim1.setDuration(1400);
                                 anim2.setDuration(1400);
                                 incomeProgress.startAnimation(anim1);
@@ -230,8 +231,8 @@ public class Dashboard extends Fragment {
                                     totOutcome += data.getAmount();
                                 }
 
-                                ProgressBarAnimation anim1 = new ProgressBarAnimation(incomeProgress, incomeText, 0, calculatePercentage((float) totIncome, (float) totOutcome));
-                                ProgressBarAnimation anim2 = new ProgressBarAnimation(outcomeProgress, outcomeText, 0, calculatePercentage((float) totOutcome, (float) totIncome));
+                                ProgressBarAnimation anim1 = new ProgressBarAnimation(incomeProgress, incomeText, 0, calculatePercentage(totIncome, totOutcome));
+                                ProgressBarAnimation anim2 = new ProgressBarAnimation(outcomeProgress, outcomeText, 0, calculatePercentage(totOutcome, totIncome));
                                 anim1.setDuration(1400);
                                 anim2.setDuration(1400);
                                 incomeProgress.startAnimation(anim1);
@@ -261,8 +262,8 @@ public class Dashboard extends Fragment {
                                     totIncome += data.getAmount();
                                 }
 
-                                ProgressBarAnimation anim1 = new ProgressBarAnimation(incomeProgress, incomeText, 0, calculatePercentage((float) totIncome, (float) totOutcome));
-                                ProgressBarAnimation anim2 = new ProgressBarAnimation(outcomeProgress, outcomeText, 0, calculatePercentage((float) totOutcome, (float) totIncome));
+                                ProgressBarAnimation anim1 = new ProgressBarAnimation(incomeProgress, incomeText, 0, calculatePercentage(totIncome, totOutcome));
+                                ProgressBarAnimation anim2 = new ProgressBarAnimation(outcomeProgress, outcomeText, 0, calculatePercentage(totOutcome, totIncome));
                                 anim1.setDuration(1400);
                                 anim2.setDuration(1400);
                                 incomeProgress.startAnimation(anim1);
@@ -283,8 +284,8 @@ public class Dashboard extends Fragment {
                                     totOutcome += data.getAmount();
                                 }
 
-                                ProgressBarAnimation anim1 = new ProgressBarAnimation(incomeProgress, incomeText, 0, calculatePercentage((float) totIncome, (float) totOutcome));
-                                ProgressBarAnimation anim2 = new ProgressBarAnimation(outcomeProgress, outcomeText, 0, calculatePercentage((float) totOutcome, (float) totIncome));
+                                ProgressBarAnimation anim1 = new ProgressBarAnimation(incomeProgress, incomeText, 0, calculatePercentage(totIncome, totOutcome));
+                                ProgressBarAnimation anim2 = new ProgressBarAnimation(outcomeProgress, outcomeText, 0, calculatePercentage(totOutcome, totIncome));
                                 anim1.setDuration(1400);
                                 anim2.setDuration(1400);
                                 incomeProgress.startAnimation(anim1);
@@ -388,13 +389,14 @@ public class Dashboard extends Fragment {
         percentage = Math.round ((x / (x+y)) * 100);
         Log.i("xValue", String.valueOf(x));
         Log.i("yValue", String.valueOf(y));
+        Log.i("Percentage", String.valueOf(percentage));
         return percentage;
     }
 
 
     public void playAnimIn(){
-        ProgressBarAnimation anim1 = new ProgressBarAnimation(incomeProgress, incomeText, 0, calculatePercentage((float) totIncome, (float) totOutcome));
-        ProgressBarAnimation anim2 = new ProgressBarAnimation(outcomeProgress, outcomeText, 0, calculatePercentage((float) totOutcome, (float) totIncome));
+        ProgressBarAnimation anim1 = new ProgressBarAnimation(incomeProgress, incomeText, 0, calculatePercentage(totIncome, totOutcome));
+        ProgressBarAnimation anim2 = new ProgressBarAnimation(outcomeProgress, outcomeText, 0, calculatePercentage(totOutcome, totIncome));
         anim1.setDuration(1400);
         anim2.setDuration(1400);
         incomeProgress.startAnimation(anim1);
@@ -404,8 +406,8 @@ public class Dashboard extends Fragment {
     }
 
     public void playAnimOut(){
-        ProgressBarAnimation anim1 = new ProgressBarAnimation(incomeProgress, incomeText, calculatePercentage((float) totIncome, (float) totOutcome), 0);
-        ProgressBarAnimation anim2 = new ProgressBarAnimation(outcomeProgress, outcomeText, calculatePercentage((float) totOutcome, (float) totIncome), 0);
+        ProgressBarAnimation anim1 = new ProgressBarAnimation(incomeProgress, incomeText, calculatePercentage(totIncome, totOutcome), 0);
+        ProgressBarAnimation anim2 = new ProgressBarAnimation(outcomeProgress, outcomeText, calculatePercentage(totOutcome, totIncome), 0);
         anim1.setDuration(1400);
         anim2.setDuration(1400);
         incomeProgress.startAnimation(anim1);
