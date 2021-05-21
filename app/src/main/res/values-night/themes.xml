@@ -2,6 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.SmallChange" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
         <item name="colorPrimary">@color/biru</item>
         <item name="colorPrimaryVariant">@color/biru</item>
         <item name="colorOnPrimary">@color/white</item>
@@ -22,5 +23,17 @@
     <style name="tab_text_low" parent="@android:style/TextAppearance.Widget.TabWidget">
         <item name="android:fontFamily">@font/bold</item>
         <item name="android:textSize">18sp</item>
+    </style>
+
+    <!--Button Text Style-->
+    <style name="button_text" parent="@android:style/TextAppearance.Widget.TabWidget">
+        <item name="android:fontFamily">@font/bold</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="popupMenuStyle" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:textColor">@color/biru</item>
+        <item name="android:fontFamily">@font/semibold</item>
+        <item name="android:popupBackground">@drawable/rounded_box</item>
     </style>
 </resources>

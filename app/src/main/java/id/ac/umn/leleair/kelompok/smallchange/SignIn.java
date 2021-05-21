@@ -1,26 +1,36 @@
 package id.ac.umn.leleair.kelompok.smallchange;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -118,12 +128,63 @@ public class SignIn extends Fragment {
         mForgetPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ReseatActivity.class);
-                startActivity(intent);
+                forgotPassword();
             }
         });
 
         return view;
+    }
+
+
+    public void forgotPassword() {
+        //Change Password Form
+        Dialog forgotPassDialog = new Dialog(getActivity());
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        View myviewm = inflater.inflate(R.layout.forgot_password, null);
+        forgotPassDialog.setContentView(myviewm);
+        forgotPassDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        int width = (int)(getResources().getDisplayMetrics().widthPixels*0.90);
+        int height = (int)(getResources().getDisplayMetrics().heightPixels*0.41);
+
+        forgotPassDialog.getWindow().setLayout(width, height);
+
+        EditText editConfirmEmail = myviewm.findViewById(R.id.tvEmailConfirm);
+
+        Button btnSend = myviewm.findViewById(R.id.btnSend);
+
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String ConfirmEmail = editConfirmEmail.getText().toString().trim();
+
+                if(TextUtils.isEmpty(ConfirmEmail)){
+                    editConfirmEmail.setError("Required Field");
+                    return;
+                }
+                else if (!validateEmail(ConfirmEmail)){
+                    editConfirmEmail.setError("Not a valid email address!");
+                }
+
+                FirebaseAuth.getInstance().sendPasswordResetEmail(ConfirmEmail)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(getActivity().getApplicationContext(), "Email Sent", Toast.LENGTH_SHORT).show();
+                                    forgotPassDialog.dismiss();
+                                    Log.d("Status", "Email sent.");
+                                }
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(getActivity().getApplicationContext(), "Email not registered", Toast.LENGTH_SHORT).show();
+                                forgotPassDialog.dismiss();
+                                Log.d("Status", "Failed to sent.");
+                            }
+                });
+            }
+        });
+        forgotPassDialog.show();
     }
 
 
