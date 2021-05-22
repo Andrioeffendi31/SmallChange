@@ -19,7 +19,6 @@
         <activity
             android:name="id.ac.umn.leleair.kelompok.smallchange.HomeActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name="id.ac.umn.leleair.kelompok.smallchange.ReseatActivity"></activity>
         <activity
             android:name="id.ac.umn.leleair.kelompok.smallchange.Login"
             android:screenOrientation="portrait" />
