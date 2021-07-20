@@ -7,6 +7,7 @@
 
 <p align="center">a financial management app that will help you in performing daily financial management independently.</br>This application was made for our Mobile Application Programming final project.</p>
  
+ [![CodeFactor](https://www.codefactor.io/repository/github/andrioeffendi31/smallchange/badge)](https://www.codefactor.io/repository/github/andrioeffendi31/smallchange)
 ## Links
 
 - [Repo](https://github.com/Andrioeffendi31/SmallChange "SmallChange Repo")
